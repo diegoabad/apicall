@@ -18,6 +18,13 @@ const userSchema = new Schema({
     type: String,
     require: true,
   },
+  role: {
+    type: String,
+    require: true,
+  },
+  title: {
+    type: String,
+  },
   description: {
     type: String,
   },
@@ -29,6 +36,20 @@ const userSchema = new Schema({
   },
   status: {
     type: String,
+  },
+  img: {
+    type: String,
+  },
+  birth: {
+    type: Date,
+  },
+  google: {
+    type: Boolean,
+    default: false,
+  },
+  enabled: {
+    type: Boolean,
+    default: true,
   },
 });
 
