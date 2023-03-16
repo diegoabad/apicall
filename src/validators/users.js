@@ -1,9 +1,10 @@
-const { check } = require("express-validator");
+const { check, query } = require("express-validator");
 const { fieldsValidator } = require("../middlewares/fields-validators");
 const {
   isValidRole,
   emailExistRegister,
   emailExistLogin,
+  userExistById,
 } = require("../helpers/db-validators");
 
 const validateLogin = [
@@ -40,4 +41,24 @@ const validateRegister = [
   },
 ];
 
-module.exports = { validateLogin, validateRegister };
+const validateUpdate = [
+  check("id", "No es un ID valido").isMongoId(),
+  check("name", "El nombre es obligatorio").not().isEmpty().trim(),
+  check("lastName", "El apellido es obligatorio").not().isEmpty().trim(),
+  check("email", "El email es obligatorio").not().isEmpty().trim(),
+  check("email", "Debe ser un email valido").isEmail().trim(),
+  check("password", "El password es obligatorio").not().isEmpty().trim(),
+  check("password", "El password debe ser mayor a 6 letras")
+    .isLength({
+      min: 6,
+    })
+    .trim(),
+  check("id").custom(userExistById),
+  (req, res, next) => {
+    fieldsValidator(req, res, next);
+  },
+];
+
+
+
+module.exports = { validateLogin, validateRegister, validateUpdate};

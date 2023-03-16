@@ -2,6 +2,13 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const { generateJWT } = require("../helpers/jwt");
 
+const getUsers = async (req, res) => {
+  const { from, limit } = req.query;
+
+  const users = await User.find().skip(Number(from)).limit(Number(limit));
+  res.json(users);
+};
+
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -30,12 +37,10 @@ const loginUser = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({
-        ok: false,
-        msj: "Problema intentando loguearse con este usuario-saq",
-      });
+    res.status(500).json({
+      ok: false,
+      msj: "Problema intentando loguearse con este usuario-saq",
+    });
   }
 };
 
@@ -80,7 +85,7 @@ const revalidateToken = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const { id } = req.params;
-  const { password, google, email, role, ...rest } = req.body;
+  const { _id, password, google, email, role, ...rest } = req.body;
   if (password) {
     const salt = bcrypt.genSaltSync();
     rest.password = bcrypt.hashSync(password, salt);
@@ -90,6 +95,7 @@ const updateUser = async (req, res) => {
 };
 
 module.exports = {
+  getUsers,
   loginUser,
   registerUser,
   updateUser,

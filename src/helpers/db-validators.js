@@ -16,4 +16,9 @@ const emailExistLogin = async (email) => {
   if (!user) throw new Error(`El email no es correcto`);
 };
 
-module.exports = { isValidRole, emailExistRegister, emailExistLogin };
+const userExistById = async (id) => {
+  const user = await User.findById(id);
+  if (!user) throw new Error(`El id: ${id} no existe`);
+};
+
+module.exports = { isValidRole, emailExistRegister, emailExistLogin, userExistById };
